@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dong.sys.mapper.SysRoleMapper" >
+  <resultMap id="BaseResultMap" type="com.dong.sys.domain.SysRole" >
+    <id column="roleid" property="roleid" jdbcType="INTEGER" />
+    <result column="rolename" property="rolename" jdbcType="VARCHAR" />
+    <result column="roledesc" property="roledesc" jdbcType="VARCHAR" />
+    <result column="available" property="available" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    roleid, rolename, roledesc, available
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_role
+    where roleid = #{roleid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from sys_role
+    where roleid = #{roleid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.dong.sys.domain.SysRole" >
+    insert into sys_role ( rolename, roledesc,
+      available)
+    values (#{rolename,jdbcType=VARCHAR}, #{roledesc,jdbcType=VARCHAR},
+      #{available,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.dong.sys.domain.SysRole" >
+    insert into sys_role
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+
+      <if test="rolename != null" >
+        rolename,
+      </if>
+      <if test="roledesc != null" >
+        roledesc,
+      </if>
+      <if test="available != null" >
+        available,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+
+      <if test="rolename != null" >
+        #{rolename,jdbcType=VARCHAR},
+      </if>
+      <if test="roledesc != null" >
+        #{roledesc,jdbcType=VARCHAR},
+      </if>
+      <if test="available != null" >
+        #{available,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.dong.sys.domain.SysRole" >
+    update sys_role
+    <set >
+      <if test="rolename != null" >
+        rolename = #{rolename,jdbcType=VARCHAR},
+      </if>
+      <if test="roledesc != null" >
+        roledesc = #{roledesc,jdbcType=VARCHAR},
+      </if>
+      <if test="available != null" >
+        available = #{available,jdbcType=INTEGER},
+      </if>
+    </set>
+    where roleid = #{roleid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.dong.sys.domain.SysRole" >
+    update sys_role
+    set rolename = #{rolename,jdbcType=VARCHAR},
+      roledesc = #{roledesc,jdbcType=VARCHAR},
+      available = #{available,jdbcType=INTEGER}
+    where roleid = #{roleid,jdbcType=INTEGER}
+  </update>
+
+  <select id="queryAllRole" parameterType="com.dong.sys.domain.SysRole"
+        resultMap="BaseResultMap">
+    select
+      <include refid="Base_Column_List"/>
+    from sys_role
+    <where>
+      <if test="rolename!=null and rolename!=''">
+        and rolename like concat("%",#{rolename},"%")
+      </if>
+      <if test="roledesc!=null and roledesc!=''">
+        and roledesc like concat("%",#{roledesc},"%")
+      </if>
+      <if test="available!=null">
+        and available=#{available}
+      </if>
+    </where>
+
+  </select>
+
+  <delete id="deleteRoleMenuByRid" parameterType="java.lang.Integer">
+    delete from sys_role_menu where rid=#{value}
+  </delete>
+
+  <delete id="deleteRoleUserByRid" parameterType="java.lang.Integer">
+    delete  from sys_role_user where rid=#{value}
+  </delete>
+
+  <!-- 保存角色和菜单的关联关系 sys_role_menu -->
+  <insert id="insertRoleMenu">
+    insert  into sys_role_menu(rid,mid) values (#{rid},#{mid})
+  </insert>
+
+  <!-- 根据用户Id 删除 角色用户的关联 sys_role_user -->
+  <delete id="deleteRoleUserByUserId">
+    delete  from sys_role_user where uid=#{value}
+  </delete>
+
+  <!--根据用户ID 查询角色 sys_role   -->
+  <select id="queryRoleListByUserId" resultMap="BaseResultMap">
+    select r.* from sys_role r inner  join sys_role_user ru on(r.roleid=ru.rid)
+    where ru.uid=#{userId} and r.available=#{available}
+
+  </select>
+</mapper>
