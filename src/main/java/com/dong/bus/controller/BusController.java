@@ -20,7 +20,7 @@ public class BusController {
     }
 
     /**
-     * 测试远程提交
+     * 测试远程提交  修改与20201002
      */
 
     /**
