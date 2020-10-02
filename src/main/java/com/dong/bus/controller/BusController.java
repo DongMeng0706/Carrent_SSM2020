@@ -20,7 +20,7 @@ public class BusController {
     }
 
     /**
-     *
+     * 测试远程提交
      */
 
     /**
