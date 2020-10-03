@@ -12,6 +12,7 @@ public class SysUserVo extends SysUser {
     private Integer page;
     private Integer limit;
 
+    private String code;
     /**
      * 接受多个角色id
      */
@@ -39,5 +40,13 @@ public class SysUserVo extends SysUser {
 
     public void setIds(Integer[] ids) {
         this.ids = ids;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 }
